@@ -24,6 +24,8 @@ comparison to installing any other Home Assistant add-on.
 1. Check the logs of the "EMQX" to see if everything went well.
 1. Open the Web UI.
 
+**Note**: The default username and password is admin / public. You will be prompted to change the password at the first login.
+
 ## Configuration
 
 **Note**: _Remember to restart the add-on when the configuration is changed._
