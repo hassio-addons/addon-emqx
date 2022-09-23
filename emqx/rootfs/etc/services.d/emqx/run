@@ -1,0 +1,27 @@
+#!/command/with-contenv bashio
+# shellcheck disable=SC2191
+# ==============================================================================
+# Home Assistant Community Add-on: EMQX
+# Runs the EMQX broker
+# ==============================================================================
+bashio::log.info 'Starting EMQX...'
+
+export EMQX_HOST=$(bashio::info.hostname)
+export EMQX_NAME="emqx"
+export EMQX_NODE__COOKIE="${EMQX_HOST}"
+export EMQX_NODE__DATA_DIR="/data/emqx/data"
+export EMQX_NODE__ETC_DIR="/data/emqx/etc"
+export EMQX_NODE__NAME="${EMQX_NAME}@${EMQX_HOST}.local"
+export EMQX_PLUGINS__INSTALL_DIR="/data/emqx/plugins"
+export EMQX_RPC__PORT_DISCOVERY="manual"
+
+# Load custom environment variables
+for var in $(bashio::config 'env_vars|keys'); do
+    name=$(bashio::config "env_vars[${var}].name")
+    value=$(bashio::config "env_vars[${var}].value")
+    bashio::log.info "Setting ${name} to ${value}"
+    export "${name}=${value}"
+done
+
+# Run EMQX
+exec /opt/emqx/bin/emqx foreground
