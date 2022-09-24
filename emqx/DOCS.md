@@ -82,8 +82,9 @@ documentation:
   change the ports of the other add-on or change the listner ports of EMQX.
   To change the ports of EMQX, you will need to temporary stop the conflicting
   add-on, as you need to access the EMQX web UI to change the listner ports.
-- The WebRTC integration by AlexxIT is known to cause a port conflict on port 8083. Temporary disabling the integration (similar as the point above for
-  add-ons) can be used to allow accessing the EMQX web UI to adjust the
+- The WebRTC integration by AlexxIT is known to cause a port conflict on
+  port 8083. Temporary disabling the integration (similar as the point above
+  for add-ons) can be used to allow accessing the EMQX web UI to adjust the
   listeners.
 
 ## Changelog & Releases
