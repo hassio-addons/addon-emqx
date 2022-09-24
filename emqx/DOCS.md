@@ -29,7 +29,7 @@ comparison to installing any other Home Assistant add-on.
 1. Log in with the default credentials: username `admin` and password `public`.
 1. Be sure to first set up authentication in for your MQTT client, but setting
    up an authentication method in the EMQX web UI under "Access Control" ->
-  "Authentication".
+   "Authentication".
 1. Read the step above again and **make sure** you have set up authetication.
 
 _Notes:_
@@ -72,7 +72,7 @@ documentation:
 
 <https://www.emqx.io/docs/en/v5.0/admin/cfg.html>
 
-**Note**: _Only environment variables starting with `EMQX_` are accepted._
+**Note**: _Only environment variables starting with `EMQX_` are accepted.\_
 
 ## Known issues and limitations
 
@@ -82,8 +82,7 @@ documentation:
   change the ports of the other add-on or change the listner ports of EMQX.
   To change the ports of EMQX, you will need to temporary stop the conflicting
   add-on, as you need to access the EMQX web UI to change the listner ports.
-- The WebRTC integration by AlexxIT is known to cause a port conflict on port
-  8083. Temporary disabling the integration (similar as the point above for
+- The WebRTC integration by AlexxIT is known to cause a port conflict on port 8083. Temporary disabling the integration (similar as the point above for
   add-ons) can be used to allow accessing the EMQX web UI to adjust the
   listeners.
 
