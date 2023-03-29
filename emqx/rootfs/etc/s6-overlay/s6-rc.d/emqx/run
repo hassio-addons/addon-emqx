@@ -23,5 +23,8 @@ for var in $(bashio::config 'env_vars|keys'); do
     export "${name}=${value}"
 done
 
+# Set max open file limit to avoid memory allocation issues
+ulimit -n 1048576
+
 # Run EMQX
 exec /opt/emqx/bin/emqx foreground
