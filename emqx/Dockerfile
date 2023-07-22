@@ -11,13 +11,13 @@ ARG EMQX_VERSION="v5.1.2"
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
-        procps=2:3.3.17-5 \
+        procps=2:4.0.2-3 \
     \
     && mkdir /opt/emqx \
     && ARCH="${BUILD_ARCH}" \
     && if [ "${BUILD_ARCH}" = "aarch64" ]; then ARCH="arm64"; fi \
     && curl -L -s \
-        "https://github.com/emqx/emqx/releases/download/${EMQX_VERSION}/emqx-${EMQX_VERSION#v}-debian11-${ARCH}.tar.gz" \
+        "https://github.com/emqx/emqx/releases/download/${EMQX_VERSION}/emqx-${EMQX_VERSION#v}-debian12-${ARCH}.tar.gz" \
         | tar zxvf - -C /opt/emqx \
     && rm -fr \
         /opt/emqx/log \
