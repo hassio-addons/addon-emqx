@@ -28,12 +28,9 @@ RUN \
 COPY rootfs /
 
 WORKDIR /opt/emqx
-HEALTHCHECK \
-    --interval=5s \
-    --retries=5 \
-    --start-period=30s \
-    --timeout=25s \
-    CMD /opt/emqx/bin/emqx_ctl status || exit 1
+
+#healthcheck
+HEALTHCHECK CMD curl --fail http://127.0.0.1:18083 || exit 1
 
 # Build arguments
 ARG BUILD_ARCH
