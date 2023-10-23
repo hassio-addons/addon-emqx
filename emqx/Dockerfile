@@ -29,6 +29,9 @@ COPY rootfs /
 
 WORKDIR /opt/emqx
 
+#healthcheck
+HEALTHCHECK CMD curl --fail http://127.0.0.1:18083 || exit 1
+
 # Build arguments
 ARG BUILD_ARCH
 ARG BUILD_DATE
