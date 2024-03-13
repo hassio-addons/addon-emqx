@@ -17,6 +17,7 @@ arch:
   - amd64
 map:
   - ssl
+  - share
 options:
   env_vars: []
 host_network: true
