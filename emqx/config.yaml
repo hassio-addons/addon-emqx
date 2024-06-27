@@ -17,6 +17,7 @@ arch:
   - amd64
 map:
   - ssl
+  - addon_config:rw
 options:
   env_vars: []
 host_network: true
