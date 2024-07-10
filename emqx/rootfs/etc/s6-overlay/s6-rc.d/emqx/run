@@ -14,6 +14,7 @@ export EMQX_NODE__ETC_DIR="/data/emqx/etc"
 export EMQX_NODE__NAME="${EMQX_NAME}@${EMQX_HOST}.local"
 export EMQX_PLUGINS__INSTALL_DIR="/data/emqx/plugins"
 export EMQX_RPC__PORT_DISCOVERY="manual"
+export EMQX_LOG_DIR="/config/log"
 
 # Load custom environment variables
 for var in $(bashio::config 'env_vars|keys'); do
