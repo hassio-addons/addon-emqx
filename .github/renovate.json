@@ -2,19 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "rebaseWhen": "behind-base-branch",
   "dependencyDashboard": true,
-  "labels": [
-    "dependencies",
-    "no-stale"
-  ],
+  "labels": ["dependencies", "no-stale"],
   "commitMessagePrefix": "⬆️",
   "commitMessageTopic": "{{depName}}",
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "/Dockerfile$",
-        "/build.yaml$"
-      ],
+      "fileMatch": ["/Dockerfile$", "/build.yaml$"],
       "matchStringsStrategy": "any",
       "matchStrings": [
         "ARG BUILD_FROM=(?<depName>.*?):(?<currentValue>.*?)\\s+",
@@ -24,9 +18,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "/Dockerfile$"
-      ],
+      "fileMatch": ["/Dockerfile$"],
       "matchStringsStrategy": "any",
       "matchStrings": [
         "\\s\\s(?<package>[a-z0-9][a-z0-9-]+)=(?<currentValue>[a-z0-9-:_+~.]+)\\s+"
@@ -37,50 +29,31 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG EMQX_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
-      ],
+      "fileMatch": ["/Dockerfile$"],
+      "matchStrings": ["ARG EMQX_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "emqx/emqx"
     }
   ],
   "packageRules": [
     {
-      "matchDatasources": [
-        "repology"
-      ],
+      "matchDatasources": ["repology"],
       "automerge": true
     },
     {
       "groupName": "Add-on base image",
-      "matchDatasources": [
-        "docker"
-      ]
+      "matchDatasources": ["docker"]
     },
     {
       "groupName": "Add-on base image",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
       "automerge": true
     },
     {
-      "matchDatasources": [
-        "github-releases"
-      ],
-      "matchDepNames": [
-        "emqx/emqx"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchDatasources": ["github-releases"],
+      "matchDepNames": ["emqx/emqx"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     }
   ]
