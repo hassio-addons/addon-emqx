@@ -25,7 +25,9 @@ for var in $(bashio::config 'env_vars|keys'); do
 done
 
 # Set max open file limit to avoid memory allocation issues
-ulimit -n 1048576
+if [ "$(ulimit -Hn)" -gt 524288 ]; then
+    ulimit -n 524288
+fi
 
 # Run EMQX
 exec /opt/emqx/bin/emqx foreground
