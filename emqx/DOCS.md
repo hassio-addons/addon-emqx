@@ -1,13 +1,15 @@
 # Home Assistant Community Add-on: EMQX
 
-[EMQX][emqx] is an Open-source MQTT broker with a high-performance real-time
-message processing engine, powering event streaming for IoT devices at massive
-scale. As the most scalable MQTT broker, EMQX can help you connect any device,
-at any scale (including your home).
+[EMQX][https://www.emqx.com/en/products/emqx] EMQX is the world's most
+scalable and reliable MQTT platform, designed for high-performance,
+reliable, and secure IoT data infrastructure. EMQX enables you to
+connect millions of IoT devices, process and route messages in real
+time, and integrate with a wide range of backend data systems.
 
-The [EMQX MQTT broker][emqx] is an advanced alternative to the Mosquitto MQTT
-broker/add-on that is generally used in Home Assistant. It has a UI
-to configure, manage, and debug your MQTT broker, clients, and traffic.
+The [EMQX MQTT broker][https://www.emqx.com/en/products/emqx] is an
+advanced alternative to the Mosquitto MQTT broker/add-on that is
+generally used in Home Assistant. It has a UI to configure, manage,
+and debug your MQTT broker, clients, and traffic.
 
 While EMQX sells their product mainly as a cloud hosted product on their
 website, this add-on runs EMQX in a fully local, self-hosted environment.
@@ -56,10 +58,22 @@ Example add-on configuration:
 ```yaml
 env_vars:
   - name: EMQX_NODE__NAME
-    value: "something@else.local"
+    value: "emqx@stable.example.local"
 ```
 
 **Note**: _This is just an example, don't copy and paste it! Create your own!_
+
+By default, the add-on persists the selected EMQX node name in
+`/data/emqx/etc/node.name`. New installations use `emqx@127.0.0.1`; existing
+installations keep their single existing Mnesia node directory when one is
+found. This prevents Home Assistant hostname changes from changing the EMQX
+data path.
+
+If a previous hostname change already created multiple
+`/data/emqx/data/mnesia/emqx@...` directories, the add-on cannot reliably know
+which directory contains the intended data. In that case, set `EMQX_NODE__NAME`
+to the node name you want to use, or use EMQX backup and restore to migrate the
+data.
 
 ### Option: `env_vars`
 
@@ -70,7 +84,7 @@ start of this chapter to get an idea of how the configuration looks.
 For more information about using these variables, see the official EMQX
 documentation:
 
-<https://www.emqx.io/docs/en/v5.0/admin/cfg.html>
+<https://docs.emqx.com/en/emqx/latest/configuration/configuration.html>
 
 **Note**: _Only environment variables starting with `EMQX_` are accepted.\_
 

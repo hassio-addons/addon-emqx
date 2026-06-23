@@ -24,14 +24,16 @@ The most scalable open-source MQTT broker for IoT, IIoT, and connected vehicles.
 
 ## About
 
-[EMQX][emqx] is an Open-source MQTT broker with a high-performance real-time
-message processing engine, powering event streaming for IoT devices at massive
-scale. As the most scalable MQTT broker, EMQX can help you connect any device,
-at any scale (including your home).
+[EMQX][https://www.emqx.com/en/products/emqx] EMQX is the world's most
+scalable and reliable MQTT platform, designed for high-performance,
+reliable, and secure IoT data infrastructure. EMQX enables you to
+connect millions of IoT devices, process and route messages in real
+time, and integrate with a wide range of backend data systems.
 
-The [EMQX MQTT broker][emqx] is an advanced alternative to the Mosquitto MQTT
-broker/add-on that is generally used in Home Assistant. It has a UI
-to configure, manage, and debug your MQTT broker, clients, and traffic.
+The [EMQX MQTT broker][https://www.emqx.com/en/products/emqx] is an
+advanced alternative to the Mosquitto MQTT broker/add-on that is
+generally used in Home Assistant. It has a UI to configure, manage,
+and debug your MQTT broker, clients, and traffic.
 
 While EMQX sells their product mainly as a cloud hosted product on their
 website, this add-on runs EMQX in a fully local, self-hosted environment.

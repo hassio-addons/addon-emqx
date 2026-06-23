@@ -6,12 +6,43 @@
 # ==============================================================================
 bashio::log.info 'Starting EMQX...'
 
-export EMQX_HOST=$(bashio::info.hostname)
-export EMQX_NAME="emqx"
-export EMQX_NODE__COOKIE="${EMQX_HOST}"
+declare node_name
+declare -a mnesia_node_dirs=()
+legacy_node_name="emqx@$(bashio::info.hostname).local"
+readonly default_node_name="emqx@127.0.0.1"
+readonly legacy_node_name
+readonly node_name_file="/data/emqx/etc/node.name"
+readonly mnesia_dir="/data/emqx/data/mnesia"
+
+if [ -d "${mnesia_dir}" ]; then
+    mapfile -t mnesia_node_dirs < <(find "${mnesia_dir}" -mindepth 1 -maxdepth 1 -type d -name 'emqx@*' | sort)
+fi
+
+if [ -s "${node_name_file}" ]; then
+    node_name=$(< "${node_name_file}")
+elif [ "${#mnesia_node_dirs[@]}" -eq 1 ]; then
+    node_name=$(basename "${mnesia_node_dirs[0]}")
+elif [ "${#mnesia_node_dirs[@]}" -gt 1 ]; then
+    bashio::log.warning "Multiple EMQX Mnesia node directories found; set EMQX_NODE__NAME if needed"
+    if [ -d "${mnesia_dir}/${legacy_node_name}" ]; then
+        node_name="${legacy_node_name}"
+    else
+        node_name="${default_node_name}"
+    fi
+elif [ -d "${mnesia_dir}/${legacy_node_name}" ]; then
+    node_name="${legacy_node_name}"
+else
+    node_name="${default_node_name}"
+fi
+
+printf "%s" "${node_name}" > "${node_name_file}"
+
+export EMQX_HOST="${node_name#*@}"
+export EMQX_NAME="${node_name%@*}"
+export EMQX_NODE__COOKIE="addon_emqx"
 export EMQX_NODE__DATA_DIR="/data/emqx/data"
 export EMQX_NODE__ETC_DIR="/data/emqx/etc"
-export EMQX_NODE__NAME="${EMQX_NAME}@${EMQX_HOST}.local"
+export EMQX_NODE__NAME="${node_name}"
 export EMQX_PLUGINS__INSTALL_DIR="/data/emqx/plugins"
 export EMQX_RPC__PORT_DISCOVERY="manual"
 export EMQX_LOG_DIR="/config/log"
@@ -23,6 +54,18 @@ for var in $(bashio::config 'env_vars|keys'); do
     bashio::log.info "Setting ${name} to ${value}"
     export "${name}=${value}"
 done
+
+export EMQX_HOST="${EMQX_NODE__NAME#*@}"
+export EMQX_NAME="${EMQX_NODE__NAME%@*}"
+
+if ! getent hosts "${EMQX_HOST}" > /dev/null 2>&1; then
+    bashio::log.info "Adding ${EMQX_HOST} to /etc/hosts"
+    if ! printf "127.0.0.1\t%s\n" "${EMQX_HOST}" >> /etc/hosts; then
+        bashio::log.warning "Could not add ${EMQX_HOST} to /etc/hosts"
+    fi
+fi
+
+bashio::log.info "Using EMQX node name: ${EMQX_NODE__NAME}"
 
 # Set max open file limit to avoid memory allocation issues
 if [ "$(ulimit -Hn)" -gt 524288 ]; then
