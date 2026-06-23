@@ -1,12 +1,12 @@
 # Home Assistant Community Add-on: EMQX
 
-[EMQX][https://www.emqx.com/en/products/emqx] EMQX is the world's most
-scalable and reliable MQTT platform, designed for high-performance,
-reliable, and secure IoT data infrastructure. EMQX enables you to
-connect millions of IoT devices, process and route messages in real
-time, and integrate with a wide range of backend data systems.
+[EMQX](https://www.emqx.com/en/products/emqx) is the world's most scalable and
+reliable MQTT platform, designed for high-performance, reliable, and secure IoT
+data infrastructure. EMQX enables you to connect millions of IoT devices,
+process and route messages in real time, and integrate with a wide range of
+backend data systems.
 
-The [EMQX MQTT broker][https://www.emqx.com/en/products/emqx] is an
+The [EMQX MQTT broker](https://www.emqx.com/en/products/emqx) is an
 advanced alternative to the Mosquitto MQTT broker/add-on that is
 generally used in Home Assistant. It has a UI to configure, manage,
 and debug your MQTT broker, clients, and traffic.
