@@ -17,6 +17,7 @@ jobs:
 
   upgrade-test:
     name: EMQX Upgrade Test
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     permissions:
       contents: read
