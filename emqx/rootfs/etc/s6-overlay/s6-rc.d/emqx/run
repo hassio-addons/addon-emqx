@@ -14,6 +14,18 @@ readonly legacy_node_name
 readonly node_name_file="/data/emqx/etc/node.name"
 readonly mnesia_dir="/data/emqx/data/mnesia"
 
+validate_node_name() {
+    local value="$1"
+    local source="$2"
+
+    if [[ "${value}" =~ ^[A-Za-z0-9_.-]+@([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9.-]*[A-Za-z0-9])$ ]]; then
+        return
+    fi
+
+    bashio::log.fatal "Invalid EMQX node name from ${source}; expected name@host"
+    exit 1
+}
+
 if [ -d "${mnesia_dir}" ]; then
     mapfile -t mnesia_node_dirs < <(find "${mnesia_dir}" -mindepth 1 -maxdepth 1 -type d -name 'emqx@*' | sort)
 fi
@@ -35,6 +47,7 @@ else
     node_name="${default_node_name}"
 fi
 
+validate_node_name "${node_name}" "persisted or discovered node name"
 printf "%s" "${node_name}" > "${node_name_file}"
 
 export EMQX_HOST="${node_name#*@}"
@@ -55,6 +68,7 @@ for var in $(bashio::config 'env_vars|keys'); do
     export "${name}=${value}"
 done
 
+validate_node_name "${EMQX_NODE__NAME}" "EMQX_NODE__NAME"
 export EMQX_HOST="${EMQX_NODE__NAME#*@}"
 export EMQX_NAME="${EMQX_NODE__NAME%@*}"
 
