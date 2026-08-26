@@ -6,7 +6,9 @@
 # ==============================================================================
 bashio::log.info 'Starting EMQX...'
 
-export EMQX_HOST=$(bashio::info.hostname)
+EMQX_HOST=$(bashio::info.hostname)
+
+export EMQX_HOST
 export EMQX_NAME="emqx"
 export EMQX_NODE__COOKIE="${EMQX_HOST}"
 export EMQX_NODE__DATA_DIR="/data/emqx/data"
