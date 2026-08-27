@@ -17,6 +17,7 @@ RUN \
     \
     && rm -f -r /etc/nginx \
     && mkdir -p /var/log/nginx \
+    && chown -R www-data:www-data /var/lib/nginx /var/log/nginx \
     \
     && mkdir /opt/emqx \
     && ARCH="${BUILD_ARCH}" \
