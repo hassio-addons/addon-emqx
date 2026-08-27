@@ -9,6 +9,7 @@ declare node_cookie
 declare node_name
 
 readonly default_node_name="emqx@127.0.0.1"
+readonly ipv4_octet='(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])'
 readonly mnesia_dir="/data/emqx/data/mnesia"
 readonly node_cookie_file="/data/emqx/node.cookie"
 readonly node_name_file="/data/emqx/node.name"
@@ -103,7 +104,7 @@ fi
 # either does not resolve or, worse, resolves to whatever took the old name, so
 # it is pinned here. /etc/hosts is consulted ahead of DNS.
 emqx_host="${EMQX_NODE__NAME#*@}"
-if [[ ! "${emqx_host}" =~ ^[0-9.]+$ ]]; then
+if [[ ! "${emqx_host}" =~ ^${ipv4_octet}(\.${ipv4_octet}){3}$ ]]; then
     bashio::log.info "Mapping ${emqx_host} onto 127.0.0.1"
     printf '127.0.0.1\t%s\n' "${emqx_host}" >> /etc/hosts \
         || bashio::log.warning "Could not add ${emqx_host} to /etc/hosts"
