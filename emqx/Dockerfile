@@ -11,7 +11,13 @@ ARG EMQX_VERSION="6.2.3"
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
+        libnginx-mod-http-set-misc=0.33-6 \
+        nginx-light=1.26.3-3+deb13u7 \
         procps=2:4.0.4-9 \
+    \
+    && rm -f -r /etc/nginx \
+    && mkdir -p /var/log/nginx \
+    && chown -R www-data:www-data /var/lib/nginx /var/log/nginx \
     \
     && mkdir /opt/emqx \
     && ARCH="${BUILD_ARCH}" \

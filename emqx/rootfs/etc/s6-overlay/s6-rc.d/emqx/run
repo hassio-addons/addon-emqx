@@ -8,6 +8,7 @@ declare emqx_host
 declare node_cookie
 declare node_name
 
+readonly dashboard_bind="127.0.0.1:18081"
 readonly default_node_name="emqx@127.0.0.1"
 readonly ipv4_octet='(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])'
 readonly mnesia_dir="/data/emqx/data/mnesia"
@@ -78,6 +79,9 @@ node_cookie=$(resolve_node_cookie)
 
 (umask 077 && printf '%s' "${node_cookie}" > "${node_cookie_file}")
 
+# The dashboard sits behind NGINX, which repairs request paths that Home
+# Assistant Ingress has decoded, so EMQX itself only listens on the loopback.
+export EMQX_DASHBOARD__LISTENERS__HTTP__BIND="${dashboard_bind}"
 export EMQX_NODE__NAME="${node_name}"
 export EMQX_NODE__COOKIE="${node_cookie}"
 export EMQX_NODE__DATA_DIR="/data/emqx/data"
@@ -93,6 +97,15 @@ for var in $(bashio::config 'env_vars|keys'); do
     bashio::log.info "Setting ${name} to ${value}"
     export "${name}=${value}"
 done
+
+# NGINX serves the web UI on 18083 and proxies to the address above, so the
+# dashboard listener is not an installation's to move.
+if [[ "${EMQX_DASHBOARD__LISTENERS__HTTP__BIND}" != "${dashboard_bind}" ]]; then
+    bashio::log.warning \
+        "Ignoring EMQX_DASHBOARD__LISTENERS__HTTP__BIND;" \
+        "the web UI is served through NGINX on port 18083"
+    export EMQX_DASHBOARD__LISTENERS__HTTP__BIND="${dashboard_bind}"
+fi
 
 if [[ ! "${EMQX_NODE__NAME}" =~ ^[A-Za-z0-9_.-]+@[A-Za-z0-9][A-Za-z0-9.-]*$ ]]; then
     bashio::log.fatal "Invalid EMQX node name: ${EMQX_NODE__NAME}"
