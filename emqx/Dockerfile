@@ -53,7 +53,7 @@ LABEL \
     io.hass.description="${BUILD_DESCRIPTION}" \
     org.opencontainers.image.vendor="Home Assistant Community Apps" \
     org.opencontainers.image.authors="Franck Nijhof <opensource@frenck.dev>" \
-    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.licenses="MIT AND BUSL-1.1" \
     org.opencontainers.image.url="https://frenck.dev/home-assistant-apps" \
     org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
     org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/main/README.md" \
