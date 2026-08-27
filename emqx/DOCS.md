@@ -56,7 +56,7 @@ Example app configuration:
 ```yaml
 env_vars:
   - name: EMQX_NODE__NAME
-    value: "something@else.local"
+    value: "emqx@stable.example"
 ```
 
 **Note**: _This is just an example, don't copy and paste it! Create your own!_
@@ -73,6 +73,28 @@ documentation:
 <https://docs.emqx.com/en/emqx/v5.10/configuration/configuration.html#environment-variables>
 
 **Note**: _Only environment variables starting with `EMQX_` are accepted.\_
+
+### The EMQX node name
+
+EMQX stores its database in a directory named after its node name, and this app
+used to derive that name from the Home Assistant hostname. Renaming your Home
+Assistant instance therefore pointed EMQX at a fresh, empty database, leaving
+the old one on disk but out of reach.
+
+The node name is now decided once and kept in `/data/emqx/node.name`:
+
+- A new installation uses `emqx@127.0.0.1`.
+- An existing installation keeps the name its database already carries, so
+  nothing moves when you update.
+
+You do not need to configure anything. If you want a specific name anyway, set
+`EMQX_NODE__NAME` through `env_vars` and it wins over both of the above.
+
+If a hostname change already left you with more than one database directory
+under `/data/emqx/data/mnesia`, this app cannot tell which one you meant to
+keep. It logs the names it found and carries on with one of them; set
+`EMQX_NODE__NAME` to the one you want, or use
+[EMQX backup and restore][backup-restore] to merge them.
 
 ## Known issues and limitations
 
@@ -148,6 +170,7 @@ SOFTWARE.
 
 [addon-badge]: https://my.home-assistant.io/badges/supervisor_addon.svg
 [addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_emqx&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
+[backup-restore]: https://docs.emqx.com/en/emqx/latest/operations/backup-restore.html
 [contributors]: https://github.com/hassio-addons/app-emqx/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
 [discord]: https://discord.me/hassioaddons
