@@ -5,10 +5,12 @@
 # Runs the EMQX broker
 # ==============================================================================
 declare emqx_host
+declare node_cookie
 declare node_name
 
 readonly default_node_name="emqx@127.0.0.1"
 readonly mnesia_dir="/data/emqx/data/mnesia"
+readonly node_cookie_file="/data/emqx/node.cookie"
 readonly node_name_file="/data/emqx/node.name"
 
 # EMQX keeps its database in a directory named after the node name, and that
@@ -27,7 +29,7 @@ resolve_node_name() {
     if bashio::fs.directory_exists "${mnesia_dir}"; then
         mapfile -t node_dirs < <(
             find "${mnesia_dir}" -mindepth 1 -maxdepth 1 -type d \
-                -name 'emqx@*' -printf '%f\n' | sort
+                -name '*@*' -printf '%f\n' | sort
         )
     fi
 
@@ -56,12 +58,27 @@ resolve_node_name() {
     printf '%s' "${default_node_name}"
 }
 
+# The Erlang cookie guards distribution access, and this app runs with host
+# networking. Deriving it from anything shared, a hostname or the default node
+# name, hands every installation the same secret, so one is drawn per install.
+resolve_node_cookie() {
+    if bashio::fs.file_non_empty "${node_cookie_file}"; then
+        cat "${node_cookie_file}"
+        return
+    fi
+
+    od -vAn -tx1 -N32 /dev/urandom | tr -d ' \n'
+}
+
 bashio::log.info 'Starting EMQX...'
 
 node_name=$(resolve_node_name)
+node_cookie=$(resolve_node_cookie)
+
+(umask 077 && printf '%s' "${node_cookie}" > "${node_cookie_file}")
 
 export EMQX_NODE__NAME="${node_name}"
-export EMQX_NODE__COOKIE="${node_name#*@}"
+export EMQX_NODE__COOKIE="${node_cookie}"
 export EMQX_NODE__DATA_DIR="/data/emqx/data"
 export EMQX_NODE__ETC_DIR="/data/emqx/etc"
 export EMQX_PLUGINS__INSTALL_DIR="/data/emqx/plugins"
@@ -81,11 +98,12 @@ if [[ ! "${EMQX_NODE__NAME}" =~ ^[A-Za-z0-9_.-]+@[A-Za-z0-9][A-Za-z0-9.-]*$ ]]; 
     bashio::exit.nok 'A node name looks like "emqx@127.0.0.1"'
 fi
 
-# The Erlang VM resolves the host part of its own node name at boot. An
-# installation that keeps a name from before a hostname change no longer
-# resolves it, so point the name back at this container.
+# The Erlang distribution resolves the host part of the node name, and without
+# it `emqx ctl` cannot reach the node. A name kept from before a hostname change
+# either does not resolve or, worse, resolves to whatever took the old name, so
+# it is pinned here. /etc/hosts is consulted ahead of DNS.
 emqx_host="${EMQX_NODE__NAME#*@}"
-if ! getent hosts "${emqx_host}" > /dev/null; then
+if [[ ! "${emqx_host}" =~ ^[0-9.]+$ ]]; then
     bashio::log.info "Mapping ${emqx_host} onto 127.0.0.1"
     printf '127.0.0.1\t%s\n' "${emqx_host}" >> /etc/hosts \
         || bashio::log.warning "Could not add ${emqx_host} to /etc/hosts"

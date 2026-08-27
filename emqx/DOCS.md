@@ -92,8 +92,10 @@ You do not need to configure anything. If you want a specific name anyway, set
 
 If a hostname change already left you with more than one database directory
 under `/data/emqx/data/mnesia`, this app cannot tell which one you meant to
-keep. It logs the names it found and carries on with one of them; set
-`EMQX_NODE__NAME` to the one you want, or use
+keep. It logs the names it found and then falls back to the name matching your
+current hostname, or to `emqx@127.0.0.1` when none of them match. That fallback
+is an empty database, so EMQX will look freshly installed. Set
+`EMQX_NODE__NAME` to the directory you want and restart, or use
 [EMQX backup and restore][backup-restore] to merge them.
 
 ## Known issues and limitations
