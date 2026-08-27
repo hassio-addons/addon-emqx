@@ -14,9 +14,9 @@ website, this app runs EMQX in a fully local, self-hosted environment.
 
 As of version 5.9.0, EMQX is no longer open source; it is licensed under the
 [Business Source License 1.1][emqx-license]. The build shipped here carries the
-EMQX Community License, which is free of charge and allows running a single
-node, which is exactly what this app does. Clustering requires a commercial
-license.
+EMQX Community License, which is free of charge, does not expire, and covers a
+single node with up to 10 million concurrent sessions. Clustering is the part
+that needs a commercial license, and this app has never clustered.
 
 ## Installation
 
@@ -97,8 +97,15 @@ documentation:
 
 This app has moved from EMQX 5.8.9 to EMQX 6. EMQX 6 reads the existing data
 directory in place, so dashboard users, authentication records, rules and
-retained messages carry over on the first start, and there is nothing to do
-beyond updating the app.
+retained messages carry over on the first start.
+
+One thing does not carry over. EMQX
+[does not preserve durable session state][rolling-upgrades] across the version 5
+to version 6 boundary: clients holding one reconnect into a clean session, and
+the messages queued for them while they were away are gone. This only affects
+you if you turned durable sessions on yourself through
+`EMQX_DURABLE_SESSIONS__ENABLE`, since EMQX ships with them disabled. Ordinary
+retained messages are unaffected.
 
 A major version change is still a good moment for a backup. Downgrading back to
 EMQX 5 is not something EMQX supports, so take one before updating if you want a
@@ -175,5 +182,6 @@ SOFTWARE.
 [frenck]: https://github.com/frenck
 [issue]: https://github.com/hassio-addons/app-emqx/issues
 [reddit]: https://reddit.com/r/homeassistant
+[rolling-upgrades]: https://docs.emqx.com/en/emqx/latest/deploy/rolling-upgrades.html
 [releases]: https://github.com/hassio-addons/app-emqx/releases
 [semver]: https://semver.org/spec/v2.0.0.html

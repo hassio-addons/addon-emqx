@@ -32,9 +32,9 @@ website, this app runs EMQX in a fully local, self-hosted environment.
 
 As of version 5.9.0, EMQX is no longer open source; it is licensed under the
 [Business Source License 1.1][emqx-license]. The build shipped here carries the
-EMQX Community License, which is free of charge and allows running a single
-node, which is exactly what this app does. Clustering requires a commercial
-license.
+EMQX Community License, which is free of charge, does not expire, and covers a
+single node with up to 10 million concurrent sessions. Clustering is the part
+that needs a commercial license, and this app has never clustered.
 
 [:books: Read the full app documentation][docs]
 
