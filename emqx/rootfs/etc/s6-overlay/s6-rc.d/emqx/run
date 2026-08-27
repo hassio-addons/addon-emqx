@@ -78,6 +78,9 @@ node_cookie=$(resolve_node_cookie)
 
 (umask 077 && printf '%s' "${node_cookie}" > "${node_cookie_file}")
 
+# The dashboard sits behind NGINX, which repairs request paths that Home
+# Assistant Ingress has decoded, so EMQX itself only listens on the loopback.
+export EMQX_DASHBOARD__LISTENERS__HTTP__BIND="127.0.0.1:18081"
 export EMQX_NODE__NAME="${node_name}"
 export EMQX_NODE__COOKIE="${node_cookie}"
 export EMQX_NODE__DATA_DIR="/data/emqx/data"
