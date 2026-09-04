@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup base system
 ARG BUILD_ARCH=amd64
-ARG EMQX_VERSION="6.2.3"
+ARG EMQX_VERSION="6.3.0"
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
